@@ -34,8 +34,8 @@ bool HostPowerManagement::was_suspended_ = false;
 bool HostPowerManagement::isSuspended() {
 #if defined(__AVR__)
   return USBDevice.isSuspended();
-#elif defined(ARDUINO_ARCH_GD32)
-  return USBCore().isSuspended();
+//#elif defined(ARDUINO_ARCH_GD32)
+//  return USBCore().isSuspended();
 #else
   return false;
 #endif
