@@ -2,6 +2,11 @@
 // Copyright 2016-2022 Keyboardio, inc. <jesse@keyboard.io>
 // See "LICENSE" for license details
 
+#ifndef BUILD_INFORMATION
+#define BUILD_INFORMATION "locally built"
+#endif
+
+
 /**
  * These #include directives pull in the Kaleidoscope firmware core,
  * as well as the Kaleidoscope plugins we use in the Model 100's firmware
@@ -73,7 +78,7 @@
 #include "Kaleidoscope-HardwareTestMode.h"
 
 // Support for host power management (suspend & wakeup)
-#include "Kaleidoscope-HostPowerManagement.h"
+ #include "Kaleidoscope-HostPowerManagement.h"
 
 // Support for magic combos (key chords that trigger an action)
 #include "Kaleidoscope-MagicCombo.h"
@@ -116,6 +121,7 @@
 enum {
   MACRO_VERSION_INFO,
   MACRO_ANY,
+  M_CTRLSPACE  // GM: Macro definitions
 };
 
 
@@ -171,6 +177,7 @@ enum {
   PRIMARY,
   NUMPAD,
   FUNCTION,
+  ALTLAYER
 };  // layers
 
 
@@ -187,10 +194,10 @@ enum {
   *
   */
 
-#define PRIMARY_KEYMAP_QWERTY
+// #define PRIMARY_KEYMAP_QWERTY
 // #define PRIMARY_KEYMAP_DVORAK
 // #define PRIMARY_KEYMAP_COLEMAK
-// #define PRIMARY_KEYMAP_CUSTOM
+#define PRIMARY_KEYMAP_CUSTOM
 
 
 /* This comment temporarily turns off astyle's indent enforcement
@@ -219,18 +226,18 @@ KEYMAPS(
 #elif defined (PRIMARY_KEYMAP_DVORAK)
 
   [PRIMARY] = KEYMAP_STACKED
-  (___,          Key_1,         Key_2,     Key_3,      Key_4, Key_5, Key_LEDEffectNext,
-   Key_Backtick, Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, Key_Tab,
-   Key_PageUp,   Key_A,         Key_O,     Key_E,      Key_U, Key_I,
-   Key_PageDown, Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, Key_Escape,
-   Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
+  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
+   Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
+   Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
+   Key_PageDown, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
+   Key_LeftShift, Key_Backspace, Key_LeftGui, Key_LeftControl,
    ShiftToLayer(FUNCTION),
 
-   M(MACRO_ANY),   Key_6, Key_7, Key_8, Key_9, Key_0, LockLayer(NUMPAD),
-   Key_Enter,      Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash,
-                   Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus,
-   Key_RightAlt,   Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals,
-   Key_RightShift, Key_LeftAlt, Key_Spacebar, Key_RightControl,
+   M(MACRO_ANY),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         LockLayer(NUMPAD),
+   Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
+                  Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
+   Key_RightAlt,  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
+   Key_RightControl, Key_LeftAlt, Key_Spacebar, Key_RightShift,
    ShiftToLayer(FUNCTION)),
 
 #elif defined (PRIMARY_KEYMAP_COLEMAK)
@@ -257,14 +264,14 @@ KEYMAPS(
    Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
    Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
    Key_PageDown, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
-   Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
+   Key_LeftShift, Key_Backspace, Key_LeftGui, Key_LeftControl,
    ShiftToLayer(FUNCTION),
 
    M(MACRO_ANY),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         LockLayer(NUMPAD),
    Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
                   Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
    Key_RightAlt,  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
-   Key_RightShift, Key_LeftAlt, Key_Spacebar, Key_RightControl,
+   Key_RightControl, ShiftToLayer(ALTLAYER), Key_Spacebar, Key_RightShift,
    ShiftToLayer(FUNCTION)),
 
 #else
@@ -272,7 +279,6 @@ KEYMAPS(
 #error "No default keymap defined. You should make sure that you have a line like '#define PRIMARY_KEYMAP_QWERTY' in your sketch"
 
 #endif
-
 
 
   [NUMPAD] =  KEYMAP_STACKED
@@ -290,12 +296,14 @@ KEYMAPS(
    ___, ___, ___, ___,
    ___),
 
+  
+  // GM: Mouse ESDF
   [FUNCTION] =  KEYMAP_STACKED
-  (___,      Key_F1,           Key_F2,      Key_F3,     Key_F4,        Key_F5,           Key_CapsLock,
-   Key_Tab,  ___,              Key_mouseUp, ___,        Key_mouseBtnR, Key_mouseWarpEnd, Key_mouseWarpNE,
-   Key_Home, Key_mouseL,       Key_mouseDn, Key_mouseR, Key_mouseBtnL, Key_mouseWarpNW,
-   Key_End,  Key_PrintScreen,  Key_Insert,  ___,        Key_mouseBtnM, Key_mouseWarpSW,  Key_mouseWarpSE,
-   ___, Key_Delete, ___, ___,
+  (___,                 Key_F1,           Key_F2,          Key_F3,        Key_F4,           Key_F5,           Key_CapsLock,
+   Key_Tab,             ___,              ___,   Key_mouseUp,   ___,    Key_mouseWarpEnd, Key_mouseWarpNE,
+   Key_mouseScrollUp,   ___,              Key_mouseL,      Key_mouseDn,   Key_mouseR,       Key_mouseWarpNW,
+   Key_mouseScrollDn,   ___,  Key_Insert,      ___, Key_mouseBtnM,              Key_mouseWarpSW,  Key_mouseWarpSE,
+   ___, Key_Delete, Key_mouseBtnL, Key_mouseBtnR,
    ___,
 
    Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_F11,
@@ -303,7 +311,25 @@ KEYMAPS(
                                Key_LeftArrow,          Key_DownArrow,            Key_UpArrow,              Key_RightArrow,  ___,              ___,
    Key_PcApplication,          Consumer_Mute,          Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
    ___, ___, Key_Enter, ___,
+   ___),
+
+ // GM: ALTLAYER key shortcuts
+
+  [ALTLAYER] =  KEYMAP_STACKED
+  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
+   Key_Backtick, RALT(Key_Q), RALT(Key_W), RALT(Key_E), RALT(Key_R), RALT(Key_T), Key_Tab,
+   Key_PageUp,   RALT(Key_A), RALT(Key_S), RALT(Key_D), RALT(Key_F), RALT(Key_G),
+   Key_PageDown, RALT(Key_Z), RALT(Key_X), RALT(Key_C), RALT(Key_V), RALT(Key_B), Key_Escape,
+   ___, ___, ___, ___,
+   ___,
+
+   M(MACRO_ANY),  Key_6, Key_7, Key_8, Key_9, Key_0, LockLayer(NUMPAD),
+   Key_Enter,     RALT(Key_Y), RALT(Key_U), RALT(Key_I), RALT(Key_O), RALT(Key_P), Key_Equals,
+                  RALT(Key_H), RALT(Key_J), LCTRL(Key_Space), RALT(Key_L), Key_Semicolon, Key_Quote,
+   Key_RightAlt,  RALT(Key_N), RALT(Key_M), Key_Comma, Key_Period, Key_Slash, Key_Minus,
+   ___, ___, ___, ___,
    ___)
+
 ) // KEYMAPS(
 
 /* Re-enable astyle's indent enforcement */
@@ -359,11 +385,14 @@ const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
   case MACRO_ANY:
     anyKeyMacro(event);
     break;
+
+  case M_CTRLSPACE:
+    return MACRO(Tr(LCTRL(Key_Space)));
+  
   }
+   
   return MACRO_NONE;
 }
-
-
 // These 'solid' color effect definitions define a rainbow of
 // LED color modes calibrated to draw 500mA or less on the
 // Keyboardio Model 100.
@@ -449,13 +478,38 @@ static void enterHardwareTestMode(uint8_t combo_index) {
  */
 USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
                   // Left Fn + Esc + Shift
-                  .keys = {R3C6, R2C6, R3C7}},
-                 {.action = enterHardwareTestMode,
-                  // Left Fn + Prog + LED
-                  .keys = {R3C6, R0C0, R0C6}},
-                 {.action = toggleKeymapSource,
-                  // Left Fn + Prog + Shift
-                  .keys = {R3C6, R0C0, R3C7}});
+                  .keys = { R3C6, R2C6, R3C7 }
+}, {
+  .action = enterHardwareTestMode,
+  // Left Fn + Prog + LED
+  .keys = { R3C6, R0C0, R0C6 }
+});
+
+class LayerColorOverride_: public kaleidoscope::Plugin {
+public:
+  LayerColorOverride_() {}
+
+  kaleidoscope::EventHandlerResult onLayerChange() {
+    switch(Layer.mostRecent()) {
+      case PRIMARY:
+        LEDRainbowWaveEffect.activate();
+        // LEDChaseEffect.activate();
+        break;
+      case FUNCTION:
+        LEDOff.activate();
+        ColormapEffect.activate();
+
+        break;
+      case ALTLAYER:
+        LEDOff.activate();
+        ColormapEffect.activate();
+
+	break;
+    }
+    return kaleidoscope::EventHandlerResult::OK;
+  }
+};
+LayerColorOverride_ LayerColorOverride;
 
 // First, tell Kaleidoscope which plugins you want to use.
 // The order can be important. For example, LED effects are
@@ -495,13 +549,14 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
   // LEDControl provides support for other LED modes
   LEDControl,
+  LayerColorOverride,
 
   // We start with the LED effect that turns off all the LEDs.
   LEDOff,
 
   // The rainbow effect changes the color of all of the keyboard's keys at the same time
   // running through all the colors of the rainbow.
-  LEDRainbowEffect,
+  //LEDRainbowEffect,
 
   // The rainbow wave effect lights up your keyboard with all the colors of a rainbow
   // and slowly moves the rainbow across your keyboard
@@ -509,26 +564,26 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
   // The chase effect follows the adventure of a blue pixel which chases a red pixel across
   // your keyboard. Spoiler: the blue pixel never catches the red pixel
-  LEDChaseEffect,
+  //LEDChaseEffect,
 
   // These static effects turn your keyboard's LEDs a variety of colors
-  solidRed,
-  solidOrange,
-  solidYellow,
-  solidGreen,
-  solidBlue,
-  solidIndigo,
-  solidViolet,
+  //solidRed,
+  //solidOrange,
+  //solidYellow,
+  //solidGreen,
+  //solidBlue,
+  //solidIndigo,
+  //solidViolet,
 
   // The breathe effect slowly pulses all of the LEDs on your keyboard
-  LEDBreatheEffect,
+  //LEDBreatheEffect,
 
   // The AlphaSquare effect prints each character you type, using your
   // keyboard's LEDs as a display
-  AlphaSquareEffect,
+  //AlphaSquareEffect,
 
   // The stalker effect lights up the keys you've pressed recently
-  StalkerEffect,
+  //StalkerEffect,
 
   // The LED Palette Theme plugin provides a shared palette for other plugins,
   // like Colormap below
@@ -669,6 +724,9 @@ void setup() {
   // firmware starts with LED effects off. This avoids over-taxing devices that
   // don't have a lot of power to share with USB devices
   DefaultLEDModeConfig.activateLEDModeIfUnconfigured(&LEDOff);
+
+  // GM: LED timeout
+  PersistentIdleLEDs.setIdleTimeoutSeconds(300);  // 5 minutes
 }
 
 /** loop is the second of the standard Arduino sketch functions.
@@ -680,4 +738,11 @@ void setup() {
 
 void loop() {
   Kaleidoscope.loop();
+
+  // GM: Mouse acceleration and control
+  MouseKeys.speed = 28;
+  MouseKeys.speedDelay = 3;
+  MouseKeys.accelDelay = 40;
+  MouseKeys.accelSpeed = 1;
+  MouseKeys.setSpeedLimit(128);
 }
